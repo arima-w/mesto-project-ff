@@ -11,19 +11,27 @@ const placesList = document.querySelector('.places__list');
 
 const cardTemplate = document.querySelector('#card-template').content;
 
-function card(link, name) {
+
+function createCard(data) {
     const lacesItem = cardTemplate.querySelector('.places__item').cloneNode(true);
     
-    lacesItem.querySelector('.card__image').src = link;
-    lacesItem.querySelector('.card__title').textContent = name;
+    lacesItem.querySelector('.card__image').src = data.link;
+    lacesItem.querySelector('.card__title').textContent = data.name;
+    lacesItem.querySelector('.card__image').alt = `Пейзаж местности ${lacesItem.querySelector('.card__title').textContent}`;
 
-    placesList.append(lacesItem);
-    
-    lacesItem.querySelector('.card__delete-button').addEventListener('click', function () {
-        lacesItem.remove();
-    });
+    lacesItem.querySelector('.card__delete-button').addEventListener('click', () => handleDeleteCard(lacesItem));
+
+    return lacesItem;
+}
+
+function handleDeleteCard(item) {
+    item.remove();
+}
+
+function renderCard(card) {
+    placesList.append(card);
 }
 
 for (let i = 0; i < initialCards.length; i++) {
-    card(initialCards[i].link, initialCards[i].name);
+    renderCard(createCard(initialCards[i]));
 }
