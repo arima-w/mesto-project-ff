@@ -56,6 +56,16 @@ function closePopup(popup) {
     popup.classList.remove('popup_is-opened');
 }
 
+function ESCclose(evt) {
+    if (evt.keyCode == 27) {
+        const popup = document.querySelector('.popup_is-opened');
+        closePopup(popup);
+    }
+}
+
+document.addEventListener('keydown', ESCclose)
+
+
 profileEditButton.addEventListener('click', () => openPopup(popopEdit));
 closePopupEdit.addEventListener('click', () => closePopup(popopEdit));
 
@@ -133,3 +143,26 @@ function openPopupImage(name, link) {
 function like(item) {
     item.classList.toggle('card__like-button_is-active');
 }
+
+
+
+popupNewCard.addEventListener("mousedown", (event) => {
+    if (event.target === popupNewCard) {
+        closePopup(popupNewCard);
+    }
+});
+
+
+popopEdit.addEventListener("mousedown", (event) => {
+    if (event.target === popopEdit) {
+        closePopup(popopEdit);
+    }
+});
+
+const popupTypeImage = document.querySelector('.popup_type_image');
+
+popupTypeImage.addEventListener("mousedown", (event) => {
+    if (event.target === popupTypeImage) {
+        closePopup(popupTypeImage);
+    }
+});
