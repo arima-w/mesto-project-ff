@@ -1,6 +1,6 @@
-import { initialCards, createCard, handleDeleteCard, displayLike } from './cards.js';
-import { openPopup, closePopup, ESCclose, openPopupImage, gg } from './modal.js'
-
+import { initialCards, createCard, handleDeleteCard, displayLike } from './components/cards.js';
+import { openPopup, closePopup, ESCclose, openPopupImage, closePopupOverlay } from './components/modal.js'
+import './pages/index.css';
 
 const placesList = document.querySelector('.places__list');
 
@@ -90,8 +90,8 @@ formNewPlace.addEventListener('submit', handleNewCard)
 
 const popupTypeImage = document.querySelector('.popup_type_image');
 
-popupNewCard.addEventListener("mousedown", () => gg(event, popupNewCard));
+popupNewCard.addEventListener("mousedown", () => closePopupOverlay(event, popupNewCard));
 
-popopEdit.addEventListener("mousedown", () => gg(event, popopEdit));
+popopEdit.addEventListener("mousedown", () => closePopupOverlay(event, popopEdit));
 
-popupTypeImage.addEventListener("mousedown", () => gg(event, popupTypeImage));
+popupTypeImage.addEventListener("mousedown", () => closePopupOverlay(event, popupTypeImage));

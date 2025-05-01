@@ -29,10 +29,10 @@ function ESCclose(evt) {
     }
 }
 
-function gg(event, ww) {
+function closePopupOverlay(event, ww) {
     if (event.target === ww) {
         closePopup(ww);
     }
 }
 
-export {openPopup, closePopup, ESCclose, openPopupImage, gg};
+export {openPopup, closePopup, ESCclose, openPopupImage, closePopupOverlay};
