@@ -1,26 +1,13 @@
 function openPopup(popup) {
     popup.classList.add('popup_is-opened');
+    document.addEventListener('keydown', ESCclose); 
 }
 
 function closePopup(popup) {
     popup.classList.remove('popup_is-opened');
+    document.removeEventListener('keydown', ESCclose)
 }
 
-
-function openPopupImage(name, link) {
-    const popupTypeImage = document.querySelector('.popup_type_image');
-    const closePopupImage = popupTypeImage.querySelector('.popup__close');
-  
-    const popupImage = popupTypeImage.querySelector('.popup__image');
-    const popupText = popupTypeImage.querySelector('.popup__caption');
-    
-    popupImage.src = link;
-    popupText.textContent = name;
-    popupImage.alt = name;
-    openPopup(popupTypeImage);
-  
-    closePopupImage.addEventListener('click', () => closePopup(popupTypeImage))
-}
 
 function ESCclose(evt) {
     if (evt.keyCode == 27) {
@@ -29,10 +16,10 @@ function ESCclose(evt) {
     }
 }
 
-function closePopupOverlay(event, ww) {
-    if (event.target === ww) {
-        closePopup(ww);
+function closePopupOverlay(event, item) {
+    if (event.target === item) {
+        closePopup(item);
     }
 }
 
-export {openPopup, closePopup, ESCclose, openPopupImage, closePopupOverlay};
+export {openPopup, closePopup, ESCclose, closePopupOverlay};
