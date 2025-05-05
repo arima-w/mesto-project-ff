@@ -44,7 +44,7 @@ const formEditDescription = formEdit.elements.description;
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 
-function formEditSubmit(evt) {
+function submitFormEdit(evt) { 
 
     evt.preventDefault();
 
@@ -57,17 +57,16 @@ function formEditSubmit(evt) {
     formEditDescription.value = '';
 }
 
-formEdit.addEventListener('submit', formEditSubmit)
+formEdit.addEventListener('submit', submitFormEdit)
 
 
 
 const popupTypeImage = document.querySelector('.popup_type_image');
 const closePopupImage = popupTypeImage.querySelector('.popup__close');
+const popupImage = popupTypeImage.querySelector('.popup__image');
+const popupText = popupTypeImage.querySelector('.popup__caption');
 
 function openPopupImage(name, link) {
-  
-    const popupImage = popupTypeImage.querySelector('.popup__image');
-    const popupText = popupTypeImage.querySelector('.popup__caption');
     
     popupImage.src = link;
     popupText.textContent = name;
@@ -77,12 +76,6 @@ function openPopupImage(name, link) {
 
 closePopupImage.addEventListener('click', () => closePopup(popupTypeImage))
 
-
-
-
-
-
-
 const formNewPlace = document.forms['new-place'];
 const formCardName = formNewPlace.elements['place-name'];
 const formCardLink = formNewPlace.elements.link;
@@ -91,7 +84,7 @@ function renderNewCard(card) {
     placesList.prepend(card);
 }
 
-function formNewPlaceSubmit(evt) {
+function submitNewFormCard(evt) {
     
     evt.preventDefault();
 
@@ -108,8 +101,7 @@ function formNewPlaceSubmit(evt) {
     closePopup(popupNewCard)
 }
 
-formNewPlace.addEventListener('submit', formNewPlaceSubmit)
-
+formNewPlace.addEventListener('submit', submitNewFormCard)
 
 popupNewCard.addEventListener("mousedown", () => closePopupOverlay(event, popupNewCard));
 
