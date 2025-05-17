@@ -1,18 +1,54 @@
-import { initialCards, createCard, handleDeleteCard, displayLike } from './components/cards.js';
-import { openPopup, closePopup, ESCclose, closePopupOverlay } from './components/modal.js'
+import { placesList, renderCard, createCard, displayLike } from './components/cards.js';
+import { openPopup, closePopup, closePopupOverlay } from './components/modal.js'
+import { enableValidation } from './components/validation.js'
+import { getUserName, getInitialCards } from './components/api.js'
 import './pages/index.css';
 
-const placesList = document.querySelector('.places__list');
+enableValidation()
 
+const userName = document.querySelector('.profile__title');
+const userAbout = document.querySelector('.profile__description');
+const avatarr = document.querySelector('.profile__image');
 
-function renderCard(card) {
-    placesList.append(card);
+function renderUserProfile ({ name, about, avatar}) {
+    userName.textContent = name;
+    userAbout.textContent = about;
+    avatarr.style.backgroundImage = `url(${avatar})`;
 }
 
+Promise.all([getUserName(), getInitialCards()])
+    .then(([user, cards]) => {
+        renderUserProfile(user);
+        cards.forEach((card) => {
+            renderCard(createCard(card, openPopupImage, displayLike));
+        });
+    })
+    .catch((error) => {
+        console.log('Ошибка при загрузке:', error);
+    })
 
-initialCards.forEach( function (item) {
-    renderCard(createCard(item, openPopupImage, displayLike))
-})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const profileEditButton = document.querySelector('.profile__edit-button');
 const profileAddButton = document.querySelector('.profile__add-button');
@@ -58,8 +94,6 @@ function submitFormEdit(evt) {
 }
 
 formEdit.addEventListener('submit', submitFormEdit)
-
-
 
 const popupTypeImage = document.querySelector('.popup_type_image');
 const closePopupImage = popupTypeImage.querySelector('.popup__close');

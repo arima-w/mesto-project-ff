@@ -22,4 +22,4 @@ function closePopupOverlay(event, item) {
     }
 }
 
-export {openPopup, closePopup, ESCclose, closePopupOverlay};
+export {openPopup, closePopup, ESCclose, closePopupOverlay};  

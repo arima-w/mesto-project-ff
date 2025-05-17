@@ -25,6 +25,11 @@ const initialCards = [
   }
 ];
 
+const placesList = document.querySelector('.places__list');
+
+function renderCard(card) {
+  placesList.append(card);
+}
 
 function createCard(data, openPopupImage, displayLike) {
   const cardTemplate = document.querySelector('#card-template').content;
@@ -55,5 +60,4 @@ function displayLike(item) {
   item.classList.toggle('card__like-button_is-active');
 }
 
-
-export {initialCards, createCard, handleDeleteCard, displayLike}
+export {placesList, renderCard, createCard, displayLike}
