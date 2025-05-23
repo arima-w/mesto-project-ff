@@ -15,7 +15,7 @@
   </header>
   <main class="content">
     <section class="profile page__section">
-      <div class="profile__image" style="background-image: url(<%=require('./images/avatar.jpg')%>)"></div>
+      <button type="button" class="profile__image" style="background-image: url(<%=require('./images/avatar.jpg')%>)"></button>
       <div class="profile__info">
         <h1 class="profile__title">Жак-Ив Кусто</h1>
         <button class="profile__edit-button" type="button"></button>
@@ -51,6 +51,7 @@
       </form>
     </div>
   </div>
+  
   <div class="popup popup_type_new-card popup_is-animated">
     <div class="popup__content">
       <button type="button" class="popup__close"></button>
@@ -68,6 +69,23 @@
       </form>
     </div>
   </div>
+
+  <div class="popup popup_type_new-avatar popup_is-animated">
+    <div class="popup__content popup__content--height">
+      <button type="button" class="popup__close"></button>
+      <h3 class="popup__title">Обновить аватар</h3>
+      
+      <form class="popup__form" name="edit-avatar" novalidate>
+                
+        <input id="description-input" type="url" name="description" class="popup__input popup__input_type_description" placeholder="Ссылка на новый аватар" required>
+        <span class="description-input-error popup__input-error"></span>
+        
+        <button type="submit" class="button popup__button">Сохранить</button>
+      
+      </form>
+    </div>
+  </div>
+
   <div class="popup popup_type_image popup_is-animated">
     <div class="popup__content popup__content_content_image">
       <button type="button" class="popup__close"></button>
@@ -75,8 +93,15 @@
       <p class="popup__caption"></p>
     </div>
   </div>
-</div>
 
+  <div class="popup popup_type_delete-card popup_is-animated">
+    <div class="popup__content popup__content--small">
+      <button type="button" class="popup__close"></button>
+      <h3 class="popup__title">Вы уверены?</h3>
+      <button type="submit" class="button popup__button">Да</button>
+    </div>
+  </div>
+</div>
 <template id="card-template">
   <li class="places__item card">
     <img class="card__image" src="" alt="" />
@@ -84,7 +109,10 @@
     <div class="card__description">
       <h2 class="card__title">
       </h2>
-      <button type="button" class="card__like-button"></button>
+      <div>
+        <button type="button" class="card__like-button"></button>
+        <p class="card__like-quantity">0</p>
+      </div>
     </div>
   </li>
 </template>

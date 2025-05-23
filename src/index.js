@@ -1,7 +1,7 @@
-import { placesList, renderCard, createCard, displayLike } from './components/cards.js';
+import { renderCard, createCard, displayLike, removeLike } from './components/cards.js';
 import { openPopup, closePopup, closePopupOverlay } from './components/modal.js'
 import { enableValidation } from './components/validation.js'
-import { getUserName, getInitialCards } from './components/api.js'
+import { getUserName, getInitialCards, getNewName, getNewCard, getNewAvatar } from './components/api.js'
 import './pages/index.css';
 
 enableValidation()
@@ -20,35 +20,12 @@ Promise.all([getUserName(), getInitialCards()])
     .then(([user, cards]) => {
         renderUserProfile(user);
         cards.forEach((card) => {
-            renderCard(createCard(card, openPopupImage, displayLike));
+            renderCard(createCard(card, openPopupImage, displayLike, removeLike));
         });
     })
     .catch((error) => {
         console.log('Ошибка при загрузке:', error);
     })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const profileEditButton = document.querySelector('.profile__edit-button');
 const profileAddButton = document.querySelector('.profile__add-button');
@@ -58,7 +35,6 @@ const popopEdit = document.querySelector('.popup_type_edit');
 
 const closePopupEdit = popopEdit.querySelector('.popup__close');
 const closePopupNewCard = popupNewCard.querySelector('.popup__close');
-
 
 
 profileEditButton.addEventListener('click', () => {
@@ -72,8 +48,6 @@ closePopupEdit.addEventListener('click', () => closePopup(popopEdit));
 profileAddButton.addEventListener('click', () => openPopup(popupNewCard));
 closePopupNewCard.addEventListener('click', () => closePopup(popupNewCard));
 
-
-
 const formEdit = document.forms['edit-profile'];
 const formEditName = formEdit.elements.name;
 const formEditDescription = formEdit.elements.description;
@@ -84,13 +58,10 @@ function submitFormEdit(evt) {
 
     evt.preventDefault();
 
-    profileTitle.textContent = formEditName.value;
-    profileDescription.textContent = formEditDescription.value;
+    getNewName(formEditName.value, formEditDescription.value)
 
     closePopup(popopEdit);
 
-    formEditName.value = '';
-    formEditDescription.value = '';
 }
 
 formEdit.addEventListener('submit', submitFormEdit)
@@ -114,21 +85,14 @@ const formNewPlace = document.forms['new-place'];
 const formCardName = formNewPlace.elements['place-name'];
 const formCardLink = formNewPlace.elements.link;
 
-function renderNewCard(card) {
-    placesList.prepend(card);
-}
-
 function submitNewFormCard(evt) {
-    
     evt.preventDefault();
 
-    const newCard = {
-        name: formCardName.value,
-        link: formCardLink.value
-    }
+    const name = formCardName.value;
+    const link = formCardLink.value;
 
-    renderNewCard(createCard(newCard, openPopupImage, displayLike));
-    
+    getNewCard(name, link)
+
     formCardName.value = '';
     formCardLink.value = '';
 
@@ -137,8 +101,36 @@ function submitNewFormCard(evt) {
 
 formNewPlace.addEventListener('submit', submitNewFormCard)
 
+const buttonNewAvatar = document.querySelector('.profile__image');
+const popopNewAvatar = document.querySelector('.popup_type_new-avatar');
+const closePopupNewAvatar = popopNewAvatar.querySelector('.popup__close');
+
+buttonNewAvatar.addEventListener('click', () => openPopup(popopNewAvatar));
+closePopupNewAvatar.addEventListener('click', () => closePopup(popopNewAvatar));
+
+const formAvatar = document.forms['edit-avatar'];
+const formAvatarLink = formAvatar.elements['description'];
+
+function submitFormNewAvatar(evt) {
+    evt.preventDefault();
+
+    const link = formAvatarLink.value
+
+    getNewAvatar(link)
+
+    closePopup(popopNewAvatar)
+}
+
+formAvatar.addEventListener('submit', submitFormNewAvatar)
+
+const popupDeletCard = document.querySelector('.popup_type_delete-card');
+
 popupNewCard.addEventListener("mousedown", () => closePopupOverlay(event, popupNewCard));
 
 popopEdit.addEventListener("mousedown", () => closePopupOverlay(event, popopEdit));
 
 popupTypeImage.addEventListener("mousedown", () => closePopupOverlay(event, popupTypeImage));
+
+popopNewAvatar.addEventListener("mousedown", () => closePopupOverlay(event, popopNewAvatar));
+
+popupDeletCard.addEventListener("mousedown", () => closePopupOverlay(event, popupDeletCard));

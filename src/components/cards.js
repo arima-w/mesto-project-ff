@@ -1,29 +1,5 @@
-const initialCards = [
-  {
-    name: "Архыз",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg",
-  },
-  {
-    name: "Челябинская область",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg",
-  },
-  {
-    name: "Иваново",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg",
-  },
-  {
-    name: "Камчатка",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg",
-  },
-  {
-    name: "Холмогорский район",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg",
-  },
-  {
-    name: "Байкал",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg",
-  }
-];
+import { closePopup, openPopup } from "./modal";
+import { deletCard, settingLike, deleteLike } from "./api" 
 
 const placesList = document.querySelector('.places__list');
 
@@ -31,33 +7,110 @@ function renderCard(card) {
   placesList.append(card);
 }
 
-function createCard(data, openPopupImage, displayLike) {
+function createCard(data, openPopupImage, displayLike, removeLike) {
   const cardTemplate = document.querySelector('#card-template').content;
   const lacesItem = cardTemplate.querySelector('.places__item').cloneNode(true);
   
   const name = data.name;
   const link = data.link;
   const alt = lacesItem.querySelector('.card__title').textContent;
-  const likeButton = lacesItem.querySelector('.card__like-button');
+  
+
   const cardImage = lacesItem.querySelector('.card__image');
+  const likeQuantit = lacesItem.querySelector('.card__like-quantity');
+  const buttonDeletCard = lacesItem.querySelector('.card__delete-button'); 
 
   cardImage.src = link;
   lacesItem.querySelector('.card__title').textContent = name;
   cardImage.alt = `Пейзаж местности ${alt}`;
 
-  lacesItem.querySelector('.card__delete-button').addEventListener('click', () => handleDeleteCard(lacesItem));
   cardImage.addEventListener('click', () => openPopupImage(name, link));
-  lacesItem.querySelector('.card__like-button').addEventListener('click', () => displayLike(likeButton))
+  
 
-  return lacesItem;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const popupDeletCard = document.querySelector('.popup_type_delete-card');
+  const popupDeletCardButton = popupDeletCard.querySelector('.popup__button');
+  const closePopupDeleteCard = popupDeletCard.querySelector('.popup__close');
+
+  if (data.owner._id !== 'c4b0220006002880d4c77b4f') {
+    buttonDeletCard.setAttribute("style", "display: none;");
+  }
+
+  buttonDeletCard.addEventListener('click', function() {
+    openPopup(popupDeletCard);
+  })
+
+  closePopupDeleteCard.addEventListener('click', function() { 
+    closePopup(popupDeletCard);
+  })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const likeButton = lacesItem.querySelector('.card__like-button');
+
+  const isLiked = data.likes.some((like) => like._id === "c4b0220006002880d4c77b4f");
+  if (isLiked) {
+    likeButton.classList.add('card__like-button_is-active');
+  }
+
+  likeQuantit.textContent = data.likes.length;;
+
+  likeButton.addEventListener('click', function(event) {
+    if (event.target.classList.contains('card__like-button_is-active')) {
+      removeLike(likeButton, data._id, likeQuantit);
+    } else {
+      displayLike(likeButton, data._id, likeQuantit);
+    }
+
+  })
+
+  return lacesItem; 
 }
 
-function handleDeleteCard(item) {
-  item.remove();
+function displayLike(item, itemId, itemLike) {
+  item.classList.add('card__like-button_is-active');
+  settingLike(itemId);
+  const quantityLike = Number(itemLike.textContent) + 1;
+  itemLike.textContent = quantityLike;
+} 
+
+function removeLike(item, itemId, itemLike) {
+  item.classList.remove('card__like-button_is-active');
+  deleteLike(itemId);
+  const quantityLike = Number(itemLike.textContent) - 1;
+  itemLike.textContent = quantityLike;
 }
 
-function displayLike(item) {
-  item.classList.toggle('card__like-button_is-active');
-}
-
-export {placesList, renderCard, createCard, displayLike}
+export {renderCard, createCard, displayLike, removeLike}
