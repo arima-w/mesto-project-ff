@@ -1,5 +1,6 @@
 import { closePopup, openPopup } from "./modal";
 import { deletCard, settingLike, deleteLike } from "./api" 
+import { cardForDelete, handleDeleteCard } from "../index.js"
 
 const placesList = document.querySelector('.places__list');
 
@@ -7,7 +8,7 @@ function renderCard(card) {
   placesList.append(card);
 }
 
-function createCard(data, openPopupImage, displayLike, removeLike) {
+function createCard(data, openPopupImage, displayLike, removeLike, handleDeleteCard) {
   const cardTemplate = document.querySelector('#card-template').content;
   const lacesItem = cardTemplate.querySelector('.places__item').cloneNode(true);
   
@@ -27,39 +28,13 @@ function createCard(data, openPopupImage, displayLike, removeLike) {
   cardImage.addEventListener('click', () => openPopupImage(name, link));
   
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  const popupDeletCard = document.querySelector('.popup_type_delete-card');
-  const popupDeletCardButton = popupDeletCard.querySelector('.popup__button');
-  const closePopupDeleteCard = popupDeletCard.querySelector('.popup__close');
-
   if (data.owner._id !== 'c4b0220006002880d4c77b4f') {
     buttonDeletCard.setAttribute("style", "display: none;");
   }
 
-  buttonDeletCard.addEventListener('click', function() {
-    openPopup(popupDeletCard);
-  })
-
-  closePopupDeleteCard.addEventListener('click', function() { 
-    closePopup(popupDeletCard);
-  })
-
-
-
-
+  buttonDeletCard.addEventListener("click", () => {
+    console.log(handleDeleteCard(data._id, lacesItem))
+  });
 
 
 
@@ -113,4 +88,4 @@ function removeLike(item, itemId, itemLike) {
   itemLike.textContent = quantityLike;
 }
 
-export {renderCard, createCard, displayLike, removeLike}
+export {renderCard, createCard, displayLike, removeLike};
