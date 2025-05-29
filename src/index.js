@@ -1,10 +1,24 @@
-import { renderCard, createCard, displayLike, removeLike } from './components/cards.js';
+import {  createCard, like } from './components/cards.js';
 import { openPopup, closePopup, closePopupOverlay } from './components/modal.js'
 import { enableValidation } from './components/validation.js'
-import { getUserName, getInitialCards, getNewName, getNewCard, getNewAvatar, deletCard } from './components/api.js'
+import { getUserName, getInitialCards, updateUSerInfo, createNewCard, updateUserAvatar, deletCard } from './components/api.js'
 import './pages/index.css';
 
-enableValidation()
+const placesList = document.querySelector('.places__list');
+
+function renderCard(card) {
+  placesList.prepend(card);
+}
+
+
+enableValidation({
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+})
 
 const userName = document.querySelector('.profile__title');
 const userAbout = document.querySelector('.profile__description');
@@ -16,11 +30,14 @@ function renderUserProfile ({ name, about, avatar}) {
     avatarr.style.backgroundImage = `url(${avatar})`;
 }
 
+let userId;
+
 Promise.all([getUserName(), getInitialCards()])
     .then(([user, cards]) => {
+        userId = user._id
         renderUserProfile(user);
         cards.forEach((card) => {
-            renderCard(createCard(card, openPopupImage, displayLike, removeLike, handleDeleteCard));
+            renderCard(createCard(card, userId, openPopupImage, like, handleDeleteCard));
         });
     })
     .catch((error) => {
@@ -105,8 +122,10 @@ function submitFormEdit(evt) {
     formEditSubmitButton.textContent = 'Сохранение...';
     formEditSubmitButton.disabled = true;
   
-    getNewName(formEditName.value, formEditDescription.value)
+    updateUSerInfo(formEditName.value, formEditDescription.value)
     .then(() => {
+        profileTitle.textContent = formEditName.value,
+        profileDescription.textContent = formEditDescription.value,
         closePopup(popopEdit);
     })
     .catch((error) => {
@@ -160,8 +179,10 @@ function submitNewFormCard(evt) {
     const name = formCardName.value;
     const link = formCardLink.value;
   
-    getNewCard(name, link)
-    .then(() => {
+    createNewCard(name, link)
+    .then((res) => {
+        console.log(createCard(res, userId, openPopupImage, like, handleDeleteCard))
+        renderCard(createCard(res, userId, openPopupImage, like, handleDeleteCard))
         formCardName.value = "";
         formCardLink.value = "";
         closePopup(popupNewCard);
@@ -192,7 +213,7 @@ function submitFormNewAvatar(evt) {
 
     const link = formAvatarLink.value
 
-    getNewAvatar(link)
+    updateUserAvatar(link)
 
     closePopup(popopNewAvatar)
 }

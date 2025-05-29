@@ -1,60 +1,56 @@
-const showInputError = (formElement, inputElement, errorMessage) => {
+const showInputError = (formElement, inputElement, errorMessage, config) => {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
 
-    inputElement.classList.add('popup__input_type_error');
+    inputElement.classList.add(config.inputErrorClass);
     errorElement.textContent = errorMessage;
-    errorElement.classList.add('popup__input-error_active');
+    errorElement.classList.add(config.errorClass);
 };
 
-const hideInputError = (formElement, inputElement) => {
+const clearValidation = (formElement, inputElement, config) => {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);    
     
-    inputElement.classList.remove('popup__input_type_error');
-    errorElement.classList.remove('popup__input-error_active');
+    inputElement.classList.remove(config.inputErrorClass);
+    errorElement.classList.remove(config.errorClass);
     errorElement.textContent = '';
 };
 
-const checkInputValidity = (formElement, inputElement) => {
+const checkInputValidity = (formElement, inputElement, config) => {
     if (inputElement.validity.patternMismatch) {
-    inputElement.setCustomValidity(inputElement.dataset.errorMessage);
-  } else {
+        inputElement.setCustomValidity(inputElement.dataset.errorMessage);
+    } else {
     inputElement.setCustomValidity("");
-  }
+    }
     
     
     if (!inputElement.validity.valid) {
-        showInputError(formElement, inputElement, inputElement.validationMessage);
+        showInputError(formElement, inputElement, inputElement.validationMessage, config);
     } else {
-        hideInputError(formElement, inputElement);
+        clearValidation(formElement, inputElement, config);
     }
 }
 
-
-
-const setEventListeners = (formElement) => {
-    const inputList = Array.from(formElement.querySelectorAll('.popup__input'))
-    const buttonElement = formElement.querySelector('.popup__button');
+const setEventListeners = (formElement, config) => {
+    const inputList = Array.from(formElement.querySelectorAll(config.inputSelector))
+    const buttonElement = formElement.querySelector(config.submitButtonSelector);
     
-    toggleButtonState(inputList, buttonElement);
+    toggleButtonState(inputList, buttonElement, config);
     inputList.forEach((inputElement) => {
         inputElement.addEventListener('input', function () {
-            checkInputValidity(formElement, inputElement);
+            checkInputValidity(formElement, inputElement, config);
 
-            toggleButtonState(inputList, buttonElement);
+            toggleButtonState(inputList, buttonElement, config);
         });
     });
 };
 
-const enableValidation = () => {
-  const formList = Array.from(document.querySelectorAll('.popup__form'));
-  
-  formList.forEach((formElement) => {
-  formElement.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-  });
-
-    setEventListeners(formElement);
-}); 
+const enableValidation = config => { 
+    const formList = document.querySelectorAll(config.formSelector);
+    formList.forEach((formElement) => { 
+    formElement.addEventListener('submit', function(evt) { 
+        evt.preventDefault() 
+    }) 
+        setEventListeners(formElement, config); 
+    })
 }
 
 const hasInvalidInput = (inputList) => {
@@ -63,15 +59,15 @@ const hasInvalidInput = (inputList) => {
     })
 }
 
-const toggleButtonState = (inputList, buttonElement) => {
+const toggleButtonState = (inputList, buttonElement, config) => {
   if (hasInvalidInput(inputList)) {
     buttonElement.disabled = true;
-    buttonElement.classList.add('popup__button_inactive');
-    buttonElement.classList.remove('popup__button');
+    buttonElement.classList.add(config.inactiveButtonClass);
+    buttonElement.classList.remove(config.submitButtonSelector);
 } else {
     buttonElement.disabled = false;
-    buttonElement.classList.remove('popup__button_inactive');
-    buttonElement.classList.add('popup__button');
+    buttonElement.classList.remove(config.inactiveButtonClass);
+    buttonElement.classList.add(config.submitButtonSelector);
 } 
 }
 

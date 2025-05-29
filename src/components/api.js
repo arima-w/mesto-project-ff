@@ -5,16 +5,18 @@ const config = {
     }
 }
 
-const getUserName = () => {    
-    return fetch(`${config.baseUrl}/users/me`, {
-        headers: config.headers
-})
-    .then(res => {
+const handleResponse = res => {
       if (res.ok) {
         return res.json();
       }
         return Promise.reject(`Ошибка: ${res.status}`);
-    }) 
+    }
+
+const getUserName = () => {    
+    return fetch(`${config.baseUrl}/users/me`, {
+        headers: config.headers
+})
+    .then(handleResponse) 
 }
 
 
@@ -22,21 +24,16 @@ const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
         headers: config.headers       
 })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    }) 
+    .then(handleResponse) 
 }
 
-console.log(getInitialCards())
 
-const getNewName =  (newName, newAbout) => {
+
+const updateUSerInfo =  (newName, newAbout) => {
    return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
     headers: {
-      authorization: '5151a2e3-585b-4d32-8fd2-2442e5bc5987',
+      authorization: config.headers.authorization,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
@@ -44,19 +41,14 @@ const getNewName =  (newName, newAbout) => {
     about: newAbout
   })
   })
-  .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    }) 
+  .then(handleResponse) 
 }
 
-const getNewAvatar = (link)  => {
+const updateUserAvatar = (link)  => {
   return fetch(`${config.baseUrl}/users/me/avatar`, {
     method: 'PATCH',
     headers: {
-      authorization: '5151a2e3-585b-4d32-8fd2-2442e5bc5987',
+      authorization: config.headers.authorization,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
@@ -66,11 +58,11 @@ const getNewAvatar = (link)  => {
 }
 
 
-const getNewCard = (newCardName, newCardLink) => {
+const createNewCard = (newCardName, newCardLink) => {
   return fetch(`${config.baseUrl}/cards`, {
     method: 'POST',
     headers: {
-      authorization: '5151a2e3-585b-4d32-8fd2-2442e5bc5987',
+      authorization: config.headers.authorization,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
@@ -78,27 +70,17 @@ const getNewCard = (newCardName, newCardLink) => {
     link: newCardLink
   })
   })
-  .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    }) 
+  .then(handleResponse) 
 }
 
 const deletCard = (idCard) => {
   return fetch(`${config.baseUrl}/cards/${idCard}`, {
     method: 'DELETE',
     headers: {
-      authorization: '5151a2e3-585b-4d32-8fd2-2442e5bc5987'
+      authorization: config.headers.authorization
     }
   })
-  .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    })
+  .then(handleResponse)
 }
 
 
@@ -106,32 +88,22 @@ const settingLike = (id) => {
   return fetch(`${config.baseUrl}/cards/likes/${id}`, {
     method: 'PUT',
     headers: {
-      authorization: '5151a2e3-585b-4d32-8fd2-2442e5bc5987'
+      authorization: config.headers.authorization
     }
   })
-  .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    })
+  .then(handleResponse)
 }
 
 const deleteLike = (id) => {
   return fetch(`${config.baseUrl}/cards/likes/${id}`, {
     method: 'DELETE',
     headers: {
-      authorization: '5151a2e3-585b-4d32-8fd2-2442e5bc5987'
+      authorization: config.headers.authorization
     }
   })
-  .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-        return Promise.reject(`Ошибка: ${res.status}`);
-    })
+  .then(handleResponse)
 }
 
 
 
-export {getUserName, getInitialCards, getNewName, getNewCard, getNewAvatar, deletCard, settingLike, deleteLike};
+export {getUserName, getInitialCards, updateUSerInfo, createNewCard, updateUserAvatar, deletCard, settingLike, deleteLike};
