@@ -6,13 +6,23 @@ const showInputError = (formElement, inputElement, errorMessage, config) => {
     errorElement.classList.add(config.errorClass);
 };
 
-const clearValidation = (formElement, inputElement, config) => {
+const hideInputError  = (formElement, inputElement, config) => {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);    
     
     inputElement.classList.remove(config.inputErrorClass);
     errorElement.classList.remove(config.errorClass);
     errorElement.textContent = '';
 };
+
+const clearValidation = (formElement, config) => {
+    const inputList = Array.from(formElement.querySelectorAll(config.inputSelector))
+    inputList.forEach(input => {
+        hideInputError(formElement, input, config)
+    });
+    const buttonElement = formElement.querySelector(config.submitButtonSelector);
+    toggleButtonState(inputList, buttonElement, config);
+}
+
 
 const checkInputValidity = (formElement, inputElement, config) => {
     if (inputElement.validity.patternMismatch) {
@@ -25,7 +35,7 @@ const checkInputValidity = (formElement, inputElement, config) => {
     if (!inputElement.validity.valid) {
         showInputError(formElement, inputElement, inputElement.validationMessage, config);
     } else {
-        clearValidation(formElement, inputElement, config);
+        hideInputError (formElement, inputElement, config);
     }
 }
 
@@ -71,4 +81,4 @@ const toggleButtonState = (inputList, buttonElement, config) => {
 } 
 }
 
-export { enableValidation }
+export { enableValidation, clearValidation }

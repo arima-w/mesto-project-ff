@@ -1,6 +1,6 @@
 import {  createCard, like } from './components/cards.js';
 import { openPopup, closePopup, closePopupOverlay } from './components/modal.js'
-import { enableValidation } from './components/validation.js'
+import { enableValidation, clearValidation } from './components/validation.js'
 import { getUserName, getInitialCards, updateUSerInfo, createNewCard, updateUserAvatar, deletCard } from './components/api.js'
 import './pages/index.css';
 
@@ -10,6 +10,7 @@ function renderCard(card) {
   placesList.prepend(card);
 }
 
+const form = document.querySelector('.popup__form');
 
 enableValidation({
   formSelector: '.popup__form',
@@ -18,7 +19,7 @@ enableValidation({
   inactiveButtonClass: 'popup__button_disabled',
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup__error_visible'
-})
+});
 
 const userName = document.querySelector('.profile__title');
 const userAbout = document.querySelector('.profile__description');
@@ -58,9 +59,15 @@ profileEditButton.addEventListener('click', () => {
     formEditName.value = profileTitle.textContent;
     formEditDescription.value =profileDescription.textContent;
     openPopup(popopEdit);
+    clearValidation(form, {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
 });
-
-
+});
 
 const popupDeletCard = document.querySelector('.popup_type_delete-card');
 const popupDeletCardButton = popupDeletCard.querySelector('.popup__button');
@@ -90,21 +97,14 @@ const handleDeleteCardSubmit = (evt) => {
     })
 };
 
-popupDeletCardButton.addEventListener('click', () => handleDeleteCardSubmit(event))
+popupDeletCardButton.addEventListener('click', () => handleDeleteCardSubmit(event));
 
-closePopupDeleteCard.addEventListener('click', () => closePopup(popupDeletCard))
-
-
-
-
-
-
-
-
+closePopupDeleteCard.addEventListener('click', () => closePopup(popupDeletCard));
 
 closePopupEdit.addEventListener('click', () => closePopup(popopEdit));
 
 profileAddButton.addEventListener('click', () => openPopup(popupNewCard));
+
 closePopupNewCard.addEventListener('click', () => closePopup(popupNewCard));
 
 const formEdit = document.forms['edit-profile'];
@@ -123,9 +123,9 @@ function submitFormEdit(evt) {
     formEditSubmitButton.disabled = true;
   
     updateUSerInfo(formEditName.value, formEditDescription.value)
-    .then(() => {
-        profileTitle.textContent = formEditName.value,
-        profileDescription.textContent = formEditDescription.value,
+    .then((data) => {
+        profileTitle.textContent = data.name,
+        profileDescription.textContent = data.about,
         closePopup(popopEdit);
     })
     .catch((error) => {
@@ -139,14 +139,6 @@ function submitFormEdit(evt) {
 }
 
 formEdit.addEventListener('submit', submitFormEdit)
-
-
-
-
-
-
-
-
 
 const popupTypeImage = document.querySelector('.popup_type_image');
 const closePopupImage = popupTypeImage.querySelector('.popup__close');
@@ -194,6 +186,15 @@ function submitNewFormCard(evt) {
         formNewPlaceSubmitButton.textContent = originalText;
         formNewPlaceSubmitButton.disabled = false;
     });
+
+    clearValidation(form, {
+        formSelector: '.popup__form',
+        inputSelector: '.popup__input',
+        submitButtonSelector: '.popup__button',
+        inactiveButtonClass: 'popup__button_disabled',
+        inputErrorClass: 'popup__input_type_error',
+        errorClass: 'popup__error_visible'
+    });
 }
 
 formNewPlace.addEventListener('submit', submitNewFormCard)
@@ -205,8 +206,10 @@ const closePopupNewAvatar = popopNewAvatar.querySelector('.popup__close');
 buttonNewAvatar.addEventListener('click', () => openPopup(popopNewAvatar));
 closePopupNewAvatar.addEventListener('click', () => closePopup(popopNewAvatar));
 
+
 const formAvatar = document.forms['edit-avatar'];
 const formAvatarLink = formAvatar.elements['description'];
+
 
 function submitFormNewAvatar(evt) {
     evt.preventDefault();
@@ -214,8 +217,17 @@ function submitFormNewAvatar(evt) {
     const link = formAvatarLink.value
 
     updateUserAvatar(link)
+    .then(() => { 
+        if(avatarr) {
+            avatarr.style.backgroundImage = `url(${link})`;
+        }
+        closePopup(popopNewAvatar)
+    })
+    .catch((error) => {
+        console.error('Ошибка:', error);
+    })
 
-    closePopup(popopNewAvatar)
+    
 }
 
 formAvatar.addEventListener('submit', submitFormNewAvatar)

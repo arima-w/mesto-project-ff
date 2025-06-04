@@ -8,7 +8,6 @@ function closePopup(popup) {
     document.removeEventListener('keydown', ESCclose)
 }
 
-
 function ESCclose(evt) {
     if (evt.keyCode == 27) {
         const popup = document.querySelector('.popup_is-opened');

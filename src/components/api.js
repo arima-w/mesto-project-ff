@@ -27,8 +27,6 @@ const getInitialCards = () => {
     .then(handleResponse) 
 }
 
-
-
 const updateUSerInfo =  (newName, newAbout) => {
    return fetch(`${config.baseUrl}/users/me`, {
     method: 'PATCH',
@@ -83,7 +81,6 @@ const deletCard = (idCard) => {
   .then(handleResponse)
 }
 
-
 const settingLike = (id) => {
   return fetch(`${config.baseUrl}/cards/likes/${id}`, {
     method: 'PUT',
@@ -103,7 +100,5 @@ const deleteLike = (id) => {
   })
   .then(handleResponse)
 }
-
-
 
 export {getUserName, getInitialCards, updateUSerInfo, createNewCard, updateUserAvatar, deletCard, settingLike, deleteLike};

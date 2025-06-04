@@ -18,7 +18,6 @@ function createCard(data, id, openPopupImage, like, handleDeleteCard) {
 
   cardImage.addEventListener('click', () => openPopupImage(name, link));
   
-
   if (data.owner._id !== id) {
     buttonDeletCard.setAttribute("style", "display: none;");
   }
@@ -43,16 +42,16 @@ function createCard(data, id, openPopupImage, like, handleDeleteCard) {
 
 function like(event, item, itemId, itemLike) {
   if (event.target.classList.contains('card__like-button_is-active')) {
-      item.classList.remove('card__like-button_is-active');
       deleteLike(itemId)
       .then((res) => {
+        item.classList.remove('card__like-button_is-active');
         itemLike.textContent = res.likes.length;
       })
       
     } else {
-      item.classList.add('card__like-button_is-active');
       settingLike(itemId)
       .then((res) => {
+        item.classList.add('card__like-button_is-active');
         itemLike.textContent = res.likes.length;
       })
     }
